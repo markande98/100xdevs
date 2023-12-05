@@ -9,5 +9,21 @@ There is no automated test for this one, this is more for you to understand time
 */
 
 function calculateTime(n) {
-    return 0.01;
+  let sum = 0;
+
+  let startTime = new Date().getTime();
+
+  for (let i = 1; i <= n; i++) sum += i;
+
+  let endTime = new Date().getTime();
+
+  let res = endTime - startTime;
+
+  return res;
 }
+
+calculateTime(100);
+calculateTime(100000);
+calculateTime(100000000);
+
+module.exports = calculateTime;
