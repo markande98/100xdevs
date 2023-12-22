@@ -33,12 +33,38 @@ router.get("/courses", async (req, res) => {
   }
 });
 
-router.post("/courses/:courseId", userMiddleware, (req, res) => {
+router.post("/courses/:courseId", userMiddleware, async (req, res) => {
   // Implement course purchase logic
+  try {
+    const course = await Course.findOne({ _id: req.params.courseId });
+    const updatedUser = await User.findOneAndUpdate(
+      {
+        username: req.headers.username,
+      },
+      {
+        $push: { purchasedCourses: course },
+      }
+    );
+    res.status(200).json({
+      message: "Course Purchased successfully",
+      updatedUser,
+    });
+  } catch (error) {
+    res.status(500).end();
+  }
 });
 
-router.get("/purchasedCourses", userMiddleware, (req, res) => {
+router.get("/purchasedCourses", userMiddleware, async (req, res) => {
   // Implement fetching purchased courses logic
+  try {
+    const user = await User.findOne({ username: req.headers.username });
+    await user.populate("purchasedCourses");
+    res.status(200).json({
+      purchasedCourses: user.purchasedCourses,
+    });
+  } catch (error) {
+    res.status(500).end();
+  }
 });
 
 module.exports = router;

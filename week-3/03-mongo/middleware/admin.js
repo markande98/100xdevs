@@ -6,7 +6,7 @@ async function adminMiddleware(req, res, next) {
   // You need to check the headers and validate the admin from the admin DB. Check readme for the exact headers to be expected
   const { username, password } = req.headers;
 
-  const admin = Admin.findOne({ username, password }).exec();
+  const admin = await Admin.findOne({ username, password }).exec();
 
   if (!admin) return res.status(403).end();
   next();
